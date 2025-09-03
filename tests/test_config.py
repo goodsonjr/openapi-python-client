@@ -7,7 +7,7 @@ from typing import Any
 import pytest
 from ruamel.yaml import YAML as _YAML
 
-from openapi_python_client.config import ConfigFile
+from openapi_python_client.config import Config, ConfigFile, JSONDecoder, MetaType
 
 
 class YAML(_YAML):
@@ -59,3 +59,22 @@ def test_load_from_path(tmp_path: Path, filename, dump, relative) -> None:
     assert config.project_name_override == "project-name"
     assert config.package_name_override == "package_name"
     assert config.package_version_override == "package_version"
+
+
+@pytest.mark.parametrize("json", [None, "orjson", "ujson"])
+def test_config_with_alt_json(json):
+    config = Config.from_sources(
+        ConfigFile(alt_json_decoder=json),
+        MetaType.POETRY,
+        document_source=Path("openapi.yaml"),
+        file_encoding="utf-8",
+        overwrite=False,
+        output_path=None,
+    )
+    config.alt_json_decoder = json
+    if json is None:
+        assert config.alt_json_decoder is None
+    elif json == "orjson":
+        assert config.alt_json_decoder == JSONDecoder.ORJSON
+    elif json == "ujson":
+        assert config.alt_json_decoder == JSONDecoder.UJSON
