@@ -22,9 +22,7 @@ def _get_kwargs(
         "url": "/body/multipart",
     }
 
-    _body = body.to_multipart()
-
-    _kwargs["files"] = _body
+    _kwargs["files"] = body.to_multipart()
 
     _kwargs["headers"] = headers
     return _kwargs
@@ -37,10 +35,12 @@ def _parse_response(
         response_200 = PostBodyMultipartResponse200.from_dict(response.json())
 
         return response_200
+
     if response.status_code == 400:
         response_400 = PublicError.from_dict(response.json())
 
         return response_400
+
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:

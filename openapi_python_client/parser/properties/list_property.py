@@ -56,7 +56,7 @@ class ListProperty(PropertyProtocol):
             `(result, schemas)` where `schemas` is an updated version of the input named the same including any inner
             classes that were defined and `result` is either the `ListProperty` or a `PropertyError`.
         """
-        from . import property_from_data
+        from . import property_from_data  # noqa: PLC0415
 
         if data.items is None and not data.prefixItems:
             return (
@@ -138,7 +138,6 @@ class ListProperty(PropertyProtocol):
         no_optional: bool = False,
         json: bool = False,
         *,
-        multipart: bool = False,
         quoted: bool = False,
     ) -> str:
         """
@@ -150,8 +149,6 @@ class ListProperty(PropertyProtocol):
         """
         if json:
             type_string = self.get_base_json_type_string()
-        elif multipart:
-            type_string = "tuple[None, bytes, str]"
         else:
             type_string = self.get_base_type_string()
 

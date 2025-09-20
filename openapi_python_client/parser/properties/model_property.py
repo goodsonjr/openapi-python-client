@@ -194,7 +194,6 @@ class ModelProperty(PropertyProtocol):
         no_optional: bool = False,
         json: bool = False,
         *,
-        multipart: bool = False,
         quoted: bool = False,
     ) -> str:
         """
@@ -206,8 +205,6 @@ class ModelProperty(PropertyProtocol):
         """
         if json:
             type_string = self.get_base_json_type_string()
-        elif multipart:
-            type_string = "tuple[None, bytes, str]"
         else:
             type_string = self.get_base_type_string()
 
@@ -250,8 +247,8 @@ def _process_properties(  # noqa: PLR0912, PLR0911
     config: Config,
     roots: set[ReferencePath | utils.ClassName],
 ) -> _PropertyData | PropertyError:
-    from . import property_from_data
-    from .merge_properties import merge_properties
+    from . import property_from_data  # noqa: PLC0415
+    from .merge_properties import merge_properties  # noqa: PLC0415
 
     properties: dict[str, Property] = {}
     relative_imports: set[str] = set()
@@ -361,7 +358,7 @@ def _get_additional_properties(
     config: Config,
     roots: set[ReferencePath | utils.ClassName],
 ) -> tuple[Property | None | PropertyError, Schemas]:
-    from . import property_from_data
+    from . import property_from_data  # noqa: PLC0415
 
     if schema_additional is None:
         return ANY_ADDITIONAL_PROPERTY, schemas

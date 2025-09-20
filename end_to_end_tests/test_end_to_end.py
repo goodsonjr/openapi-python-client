@@ -143,6 +143,7 @@ def test_literal_enums_end_to_end():
         ("setup", "setup.py", "setup.py"),
         ("pdm", "pyproject.toml", "pdm.pyproject.toml"),
         ("poetry", "pyproject.toml", "poetry.pyproject.toml"),
+        ("uv", "pyproject.toml", "uv.pyproject.toml"),
     )
 )
 def test_meta(meta: str, generated_file: Optional[str], expected_file: Optional[str]):
@@ -266,7 +267,7 @@ def test_generate_dir_already_exists():
 
 
 def test_update_integration_tests():
-    url = "https://raw.githubusercontent.com/openapi-generators/openapi-test-server/main/openapi.json"
+    url = "https://raw.githubusercontent.com/openapi-generators/openapi-test-server/refs/tags/v0.2.1/openapi.yaml"
     source_path = Path(__file__).parent.parent / "integration-tests"
     temp_dir = Path.cwd() / "test_update_integration_tests"
     shutil.rmtree(temp_dir, ignore_errors=True)
@@ -284,7 +285,7 @@ def test_update_integration_tests():
         import mypy.api
 
         out, err, status = mypy.api.run([str(temp_dir), "--strict"])
-        assert status == 0, f"Type checking client failed: {out}"
+        assert status == 0, f"Type checking client failed: {out=} {err=}"
 
     finally:
         shutil.rmtree(temp_dir)

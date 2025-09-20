@@ -72,9 +72,10 @@ from .model_with_recursive_ref import ModelWithRecursiveRef
 from .model_with_recursive_ref_in_additional_properties import ModelWithRecursiveRefInAdditionalProperties
 from .model_with_union_property import ModelWithUnionProperty
 from .model_with_union_property_inlined import ModelWithUnionPropertyInlined
-from .model_with_union_property_inlined_fruit_type_0 import ModelWithUnionPropertyInlinedFruitType0
-from .model_with_union_property_inlined_fruit_type_1 import ModelWithUnionPropertyInlinedFruitType1
+from .model_with_union_property_inlined_apples import ModelWithUnionPropertyInlinedApples
+from .model_with_union_property_inlined_bananas import ModelWithUnionPropertyInlinedBananas
 from .none import None_
+from .octet_stream_tests_octet_stream_post_response_200 import OctetStreamTestsOctetStreamPostResponse200
 from .post_bodies_multiple_data_body import PostBodiesMultipleDataBody
 from .post_bodies_multiple_files_body import PostBodiesMultipleFilesBody
 from .post_bodies_multiple_json_body import PostBodiesMultipleJsonBody
@@ -85,6 +86,9 @@ from .post_responses_unions_simple_before_complex_response_200 import PostRespon
 from .post_responses_unions_simple_before_complex_response_200a_type_1 import (
     PostResponsesUnionsSimpleBeforeComplexResponse200AType1,
 )
+from .status_code_patterns_response_2xx import StatusCodePatternsResponse2XX
+from .status_code_patterns_response_2xx_status import StatusCodePatternsResponse2XXStatus
+from .status_code_patterns_response_4xx import StatusCodePatternsResponse4XX
 from .test_inline_objects_body import TestInlineObjectsBody
 from .test_inline_objects_response_200 import TestInlineObjectsResponse200
 from .validation_error import ValidationError
@@ -154,9 +158,10 @@ __all__ = (
     "ModelWithRecursiveRefInAdditionalProperties",
     "ModelWithUnionProperty",
     "ModelWithUnionPropertyInlined",
-    "ModelWithUnionPropertyInlinedFruitType0",
-    "ModelWithUnionPropertyInlinedFruitType1",
+    "ModelWithUnionPropertyInlinedApples",
+    "ModelWithUnionPropertyInlinedBananas",
     "None_",
+    "OctetStreamTestsOctetStreamPostResponse200",
     "PostBodiesMultipleDataBody",
     "PostBodiesMultipleFilesBody",
     "PostBodiesMultipleJsonBody",
@@ -165,6 +170,9 @@ __all__ = (
     "PostNamingPropertyConflictWithImportResponse200",
     "PostResponsesUnionsSimpleBeforeComplexResponse200",
     "PostResponsesUnionsSimpleBeforeComplexResponse200AType1",
+    "StatusCodePatternsResponse2XX",
+    "StatusCodePatternsResponse2XXStatus",
+    "StatusCodePatternsResponse4XX",
     "TestInlineObjectsBody",
     "TestInlineObjectsResponse200",
     "ValidationError",

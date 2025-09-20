@@ -13,6 +13,94 @@ Programmatic usage of this project (e.g., importing it as a Python module) and t
 
 The 0.x prefix used in versions for this project is to indicate that breaking changes are expected frequently (several times a year). Breaking changes will increment the minor number, all other changes will increment the patch number. You can track the progress toward 1.0 [here](https://github.com/openapi-generators/openapi-python-client/projects/2).
 
+## 0.26.1 (2025-09-13)
+
+### Features
+
+- Reference schema support (#800) (#1307)
+- Support Ruff 0.13
+
+## 0.26.0 (2025-08-26)
+
+### Breaking Changes
+
+#### Change some union variant names
+
+When creating a union with `oneOf`, `anyOf`, or a list of `type`, the name of each variant used to be `type_{index}`
+where the index is based on the order of the types in the union.
+
+This made some modules difficult to understand, what is a `my_type_type_0` after all?
+It also meant that reordering union members, while not a breaking change to the API, _would_ be a breaking change 
+for generated clients.
+
+Now, if an individual variant has a `title` attribute, that `title` will be used in the name instead.
+This is only an enhancement for documents which use `title` in union variants, and only a breaking change for 
+_inline models_ (not `#/components/schemas` which should already have used more descriptive names).
+
+Thanks @wallagib for PR #962!
+
+### Features
+
+#### Support patterned and default HTTP statuses
+
+HTTP statuses like `2XX` and `default` are now supported!
+
+A big thank you to:
+- @PSU3D0 for PR #973 (eons ago 😅)
+- @obs-gh-peterkolloch for PR #1300
+- @goodsonjr for PR #1304
+
+Closes #1271 and #832
+
+> [!NOTE]
+> Custom template users: the `endpoint.responses` type has changed quite a bit. Check out #1303 for the changes.
+
+## 0.25.3 (2025-07-21)
+
+### Features
+
+- Add --meta uv for generating astral-sh/uv compatible packages. (#1286)
+- Switch to `uv_build` build backend. (#1290)
+
+## 0.25.2 (2025-07-03)
+
+### Fixes
+
+- Import error for `types.FileType` (#1274) (#1278)
+
+## 0.25.1 (2025-06-19)
+
+### Fixes
+
+- Support ruff 0.12 (#1270)
+
+## 0.25.0 (2025-06-06)
+
+### Breaking Changes
+
+- Raise minimum httpx version to 0.23
+
+#### Removed ability to set an array as a multipart body
+
+Previously, when defining a request's body as `multipart/form-data`, the generator would attempt to generate code 
+for both `object` schemas and `array` schemas. However, most arrays could not generate valid multipart bodies, as 
+there would be no field names (required to set the `Content-Disposition` headers).
+
+The code to generate any body for `multipart/form-data` where the schema is `array` has been removed, and any such 
+bodies will be skipped. This is not _expected_ to be a breaking change in practice, since the code generated would 
+probably never work.
+
+If you have a use-case for `multipart/form-data` with an `array` schema, please [open a new discussion](https://github.com/openapi-generators/openapi-python-client/discussions) with an example schema and the desired functional Python code.
+
+#### Change default multipart array serialization
+
+Previously, any arrays of values in a `multipart/form-data` body would be serialized as an `application/json` part.
+This matches the default behavior specified by OpenAPI and supports arrays of files (`binary` format strings).
+However, because this generator doesn't yet support specifying `encoding` per property, this may result in 
+now-incorrect code when the encoding _was_ explicitly set to `application/json` for arrays of scalar values.
+
+PR #938 fixes #692. Thanks @micha91 for the fix, @ratgen and @FabianSchurig for testing, and @davidlizeng for the original report... many years ago 😅.
+
 ## 0.24.3 (2025-03-31)
 
 ### Features

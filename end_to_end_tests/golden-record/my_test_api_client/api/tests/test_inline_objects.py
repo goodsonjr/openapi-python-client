@@ -21,9 +21,8 @@ def _get_kwargs(
         "url": "/tests/inline_objects",
     }
 
-    _body = body.to_dict()
+    _kwargs["json"] = body.to_dict()
 
-    _kwargs["json"] = _body
     headers["Content-Type"] = "application/json"
 
     _kwargs["headers"] = headers
@@ -37,6 +36,7 @@ def _parse_response(
         response_200 = TestInlineObjectsResponse200.from_dict(response.json())
 
         return response_200
+
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:

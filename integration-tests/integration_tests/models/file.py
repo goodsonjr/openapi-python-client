@@ -6,41 +6,59 @@ from attrs import field as _attrs_field
 
 from ..types import UNSET, Unset
 
-T = TypeVar("T", bound="ModelWithUnionPropertyInlinedFruitType1")
+T = TypeVar("T", bound="File")
 
 
 @_attrs_define
-class ModelWithUnionPropertyInlinedFruitType1:
+class File:
     """
     Attributes:
-        bananas (Union[Unset, str]):
+        data (Union[Unset, str]): Echo of content of the 'file' input parameter from the form.
+        name (Union[Unset, str]): The name of the file uploaded.
+        content_type (Union[Unset, str]): The content type of the file uploaded.
     """
 
-    bananas: Union[Unset, str] = UNSET
+    data: Union[Unset, str] = UNSET
+    name: Union[Unset, str] = UNSET
+    content_type: Union[Unset, str] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        bananas = self.bananas
+        data = self.data
+
+        name = self.name
+
+        content_type = self.content_type
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if bananas is not UNSET:
-            field_dict["bananas"] = bananas
+        if data is not UNSET:
+            field_dict["data"] = data
+        if name is not UNSET:
+            field_dict["name"] = name
+        if content_type is not UNSET:
+            field_dict["content_type"] = content_type
 
         return field_dict
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
-        bananas = d.pop("bananas", UNSET)
+        data = d.pop("data", UNSET)
 
-        model_with_union_property_inlined_fruit_type_1 = cls(
-            bananas=bananas,
+        name = d.pop("name", UNSET)
+
+        content_type = d.pop("content_type", UNSET)
+
+        file = cls(
+            data=data,
+            name=name,
+            content_type=content_type,
         )
 
-        model_with_union_property_inlined_fruit_type_1.additional_properties = d
-        return model_with_union_property_inlined_fruit_type_1
+        file.additional_properties = d
+        return file
 
     @property
     def additional_keys(self) -> list[str]:

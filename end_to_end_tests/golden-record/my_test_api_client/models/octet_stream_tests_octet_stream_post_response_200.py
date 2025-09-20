@@ -1,46 +1,54 @@
 from collections.abc import Mapping
+from io import BytesIO
 from typing import Any, TypeVar, Union
 
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
 
-from ..types import UNSET, Unset
+from ..types import UNSET, File, FileTypes, Unset
 
-T = TypeVar("T", bound="ModelWithUnionPropertyInlinedFruitType0")
+T = TypeVar("T", bound="OctetStreamTestsOctetStreamPostResponse200")
 
 
 @_attrs_define
-class ModelWithUnionPropertyInlinedFruitType0:
+class OctetStreamTestsOctetStreamPostResponse200:
     """
     Attributes:
-        apples (Union[Unset, str]):
+        data (Union[Unset, File]):
     """
 
-    apples: Union[Unset, str] = UNSET
+    data: Union[Unset, File] = UNSET
     additional_properties: dict[str, Any] = _attrs_field(init=False, factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
-        apples = self.apples
+        data: Union[Unset, FileTypes] = UNSET
+        if not isinstance(self.data, Unset):
+            data = self.data.to_tuple()
 
         field_dict: dict[str, Any] = {}
         field_dict.update(self.additional_properties)
         field_dict.update({})
-        if apples is not UNSET:
-            field_dict["apples"] = apples
+        if data is not UNSET:
+            field_dict["data"] = data
 
         return field_dict
 
     @classmethod
     def from_dict(cls: type[T], src_dict: Mapping[str, Any]) -> T:
         d = dict(src_dict)
-        apples = d.pop("apples", UNSET)
+        _data = d.pop("data", UNSET)
+        data: Union[Unset, File]
+        if isinstance(_data, Unset):
+            data = UNSET
+        else:
+            data = File(payload=BytesIO(_data))
 
-        model_with_union_property_inlined_fruit_type_0 = cls(
-            apples=apples,
+        octet_stream_tests_octet_stream_post_response_200 = cls(
+            data=data,
         )
 
-        model_with_union_property_inlined_fruit_type_0.additional_properties = d
-        return model_with_union_property_inlined_fruit_type_0
+        octet_stream_tests_octet_stream_post_response_200.additional_properties = d
+        return octet_stream_tests_octet_stream_post_response_200
 
     @property
     def additional_keys(self) -> list[str]:

@@ -101,7 +101,6 @@ class PropertyProtocol(Protocol):
         no_optional: bool = False,
         json: bool = False,
         *,
-        multipart: bool = False,
         quoted: bool = False,
     ) -> str:
         """
@@ -110,13 +109,10 @@ class PropertyProtocol(Protocol):
         Args:
             no_optional: Do not include Optional or Unset even if the value is optional (needed for isinstance checks)
             json: True if the type refers to the property after JSON serialization
-            multipart: True if the type should be used in a multipart request
             quoted: True if the type should be wrapped in quotes (if not a base type)
         """
         if json:
             type_string = self.get_base_json_type_string(quoted=quoted)
-        elif multipart:
-            type_string = "tuple[None, bytes, str]"
         else:
             type_string = self.get_base_type_string(quoted=quoted)
 
@@ -178,7 +174,7 @@ class PropertyProtocol(Protocol):
     @property
     def is_base_type(self) -> bool:
         """Base types, represented by any other of `Property` than `ModelProperty` should not be quoted."""
-        from . import ListProperty, ModelProperty, UnionProperty
+        from . import ListProperty, ModelProperty, UnionProperty  # noqa: PLC0415
 
         return self.__class__.__name__ not in {
             ModelProperty.__name__,

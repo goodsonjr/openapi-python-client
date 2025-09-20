@@ -20,9 +20,8 @@ def _get_kwargs(
         "url": "/tests/json_body/string",
     }
 
-    _body = body
+    _kwargs["json"] = body
 
-    _kwargs["json"] = _body
     headers["Content-Type"] = "application/json"
 
     _kwargs["headers"] = headers
@@ -35,10 +34,12 @@ def _parse_response(
     if response.status_code == 200:
         response_200 = cast(str, response.json())
         return response_200
+
     if response.status_code == 422:
         response_422 = HTTPValidationError.from_dict(response.json())
 
         return response_422
+
     if client.raise_on_unexpected_status:
         raise errors.UnexpectedStatus(response.status_code, response.content)
     else:

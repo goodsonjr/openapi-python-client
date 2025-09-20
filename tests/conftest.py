@@ -6,7 +6,7 @@ from typing import Any, Callable
 import pytest
 from mypy.semanal_shared import Protocol
 
-from openapi_python_client import Config, MetaType
+from openapi_python_client import Config, MetaType, utils
 from openapi_python_client import schema as oai
 from openapi_python_client.config import ConfigFile
 from openapi_python_client.parser.properties import (
@@ -56,7 +56,6 @@ def model_property_factory() -> ModelFactory:
 
     You can pass the same params into this as the ModelProperty constructor to override defaults.
     """
-    from openapi_python_client.parser.properties import Class
 
     def _factory(**kwargs):
         kwargs = _common_kwargs(kwargs)
@@ -130,7 +129,6 @@ def enum_property_factory() -> EnumFactory[EnumProperty]:
 
     You can pass the same params into this as the EnumProerty constructor to override defaults.
     """
-    from openapi_python_client.parser.properties import Class
 
     return _simple_factory(
         EnumProperty,
@@ -149,7 +147,6 @@ def literal_enum_property_factory() -> EnumFactory[LiteralEnumProperty]:
 
     You can pass the same params into this as the LiteralEnumProerty constructor to override defaults.
     """
-    from openapi_python_client.parser.properties import Class
 
     return _simple_factory(
         LiteralEnumProperty,
@@ -324,5 +321,5 @@ def _common_kwargs(kwargs: dict[str, Any]) -> dict[str, Any]:
         **kwargs,
     }
     if not kwargs.get("python_name"):
-        kwargs["python_name"] = kwargs["name"]
+        kwargs["python_name"] = utils.PythonIdentifier(value=kwargs["name"], prefix="")
     return kwargs
