@@ -1,7 +1,16 @@
 import ssl
 from typing import Any
 
+{% if class_type == "attrs" %}
 from attrs import define, field, evolve
+{% elif class_type == "pydantic" %}
+from pydantic import BaseModel as _BaseModel, Field as _Field
+def field(**kwargs):
+    factory = kwargs.pop("factory", None)
+    if factory:
+        kwargs["default_factory"] = factory
+    return _Field(**kwargs)
+{% endif %}
 import httpx
 
 
@@ -17,7 +26,6 @@ import httpx
     "prefix": namespace(type="str", default='"Bearer"', docstring="The prefix to use for the Authorization header"),
     "auth_header_name": namespace(type="str", default='"Authorization"', docstring="The name of the Authorization header"),
 } %}
-
 {% macro attr_in_class_docstring(name) %}
 {{ name }}: {{ attrs_info[name].docstring }}
 {%- endmacro %}
@@ -30,8 +38,12 @@ import httpx
 {%- endif %}
 {% endmacro %}
 
+{% if class_type == "attrs" %}
 @define
 class Client:
+{% elif class_type == "pydantic" %}
+class Client(_BaseModel):
+{% endif %}
     """A class for keeping track of data related to the API
 
 {% macro httpx_args_docstring() %}
@@ -79,7 +91,11 @@ class Client:
             self._client.headers.update(headers)
         if self._async_client is not None:
             self._async_client.headers.update(headers)
+        {% if class_type == "attrs" %}
         return evolve(self, headers={**self._headers, **headers})
+        {% elif class_type == "pydantic" %}
+        return self.model_copy(update={"headers": {**self._headers, **headers}})
+        {% endif %}
 
     def with_cookies(self, cookies: dict[str, str]) -> "{{ self }}":
         """Get a new client matching this one with additional cookies"""
@@ -87,7 +103,11 @@ class Client:
             self._client.cookies.update(cookies)
         if self._async_client is not None:
             self._async_client.cookies.update(cookies)
+        {% if class_type == "attrs" %}
         return evolve(self, cookies={**self._cookies, **cookies})
+        {% elif class_type == "pydantic" %}
+        return self.model_copy(update={"cookies": {**self._cookies, **cookies}})
+        {% endif %}
 
     def with_timeout(self, timeout: httpx.Timeout) -> "{{ self }}":
         """Get a new client matching this one with a new timeout configuration"""
@@ -95,7 +115,11 @@ class Client:
             self._client.timeout = timeout
         if self._async_client is not None:
             self._async_client.timeout = timeout
+        {% if class_type == "attrs" %}
         return evolve(self, timeout=timeout)
+        {% elif class_type == "pydantic" %}
+        return self.model_copy(update={"timeout": timeout})
+        {% endif %}
 {% endmacro %}{{ builders("Client") }}
 {% macro httpx_stuff(name, custom_constructor=None) %}
     def set_httpx_client(self, client: httpx.Client) -> "{{ name }}":
@@ -167,8 +191,12 @@ class Client:
         await self.get_async_httpx_client().__aexit__(*args, **kwargs)
 {% endmacro %}{{ httpx_stuff("Client") }}
 
+{% if class_type == "attrs" %}
 @define
 class AuthenticatedClient:
+{% elif class_type == "pydantic" %}
+class AuthenticatedClient(_BaseModel):
+{% endif %}
     """A Client which has been authenticated for use on secured endpoints
 
 {{ httpx_args_docstring() }}

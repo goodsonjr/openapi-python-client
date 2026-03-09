@@ -5,7 +5,7 @@ from pprint import pformat
 
 import typer
 
-from openapi_python_client import MetaType, __version__
+from openapi_python_client import ClassType, MetaType, __version__
 from openapi_python_client.config import Config, ConfigFile
 from openapi_python_client.parser.errors import ErrorLevel, GeneratorError, ParseError
 
@@ -24,6 +24,7 @@ def _process_config(
     path: Path | None,
     config_path: Path | None,
     meta_type: MetaType,
+    class_type: ClassType,
     file_encoding: str,
     overwrite: bool,
     output_path: Path | None,
@@ -54,7 +55,7 @@ def _process_config(
         except Exception as err:
             raise typer.BadParameter("Unable to parse config") from err
 
-    return Config.from_sources(config_file, meta_type, source, file_encoding, overwrite, output_path=output_path)
+    return Config.from_sources(config_file, meta_type, class_type, source, file_encoding, overwrite, output_path=output_path)
 
 
 # noinspection PyUnusedLocal
@@ -138,6 +139,10 @@ def generate(
         MetaType.POETRY,
         help="The type of metadata you want to generate.",
     ),
+    class_type: ClassType = typer.Option(
+        ClassType.ATTRS,
+        help="The style of class you want to generate."
+    ),
     file_encoding: str = typer.Option("utf-8", help="Encoding used when writing generated"),
     config_path: Path | None = typer.Option(None, "--config", help="Path to the config file to use"),
     fail_on_warning: bool = False,
@@ -157,6 +162,7 @@ def generate(
         path=path,
         config_path=config_path,
         meta_type=meta,
+        class_type=class_type,
         file_encoding=file_encoding,
         overwrite=overwrite,
         output_path=output_path,

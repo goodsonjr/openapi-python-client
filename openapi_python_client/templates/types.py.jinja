@@ -4,7 +4,11 @@ from collections.abc import Mapping, MutableMapping
 from http import HTTPStatus
 from typing import BinaryIO, Generic, TypeVar, Literal, IO
 
+{% if class_type == "attrs" %}
 from attrs import define
+{% elif class_type == "pydantic" %}
+from pydantic import BaseModel
+{% endif %}
 
 
 class Unset:
@@ -24,8 +28,12 @@ FileTypes = (
 )
 RequestFiles = list[tuple[str, FileTypes]]
 
+{% if class_type == "attrs" %}
 @define
 class File:
+{% elif class_type == "pydantic" %}
+class File(BaseModel):
+{% endif %}
     """ Contains information for file uploads """
 
     payload: BinaryIO
@@ -40,8 +48,12 @@ class File:
 T = TypeVar("T")
 
 
+{% if class_type == "attrs" %}
 @define
 class Response(Generic[T]):
+{% elif class_type == "pydantic" %}
+class Response(BaseModel, Generic[T]):
+{% endif %}
     """ A response from an endpoint """
 
     status_code: HTTPStatus

@@ -28,6 +28,12 @@ class MetaType(str, Enum):
     UV = "uv"
 
 
+class ClassType(str, Enum):
+    """The type of classes supported for project generation"""
+    ATTRS = "attrs"
+    PYDANTIC = "pydantic"
+
+
 class ConfigFile(BaseModel):
     """Contains any configurable values passed via a config file.
 
@@ -65,6 +71,7 @@ class Config:
     """Contains all the config values for the generator, from files, defaults, and CLI arguments."""
 
     meta_type: MetaType
+    class_type: ClassType
     class_overrides: dict[str, ClassOverride]
     project_name_override: str | None
     package_name_override: str | None
@@ -86,6 +93,7 @@ class Config:
     def from_sources(
         config_file: ConfigFile,
         meta_type: MetaType,
+        class_type: ClassType,
         document_source: Path | str,
         file_encoding: str,
         overwrite: bool,
@@ -106,6 +114,7 @@ class Config:
 
         config = Config(
             meta_type=meta_type,
+            class_type=class_type,
             class_overrides=config_file.class_overrides or {},
             content_type_overrides=config_file.content_type_overrides or {},
             project_name_override=config_file.project_name_override,

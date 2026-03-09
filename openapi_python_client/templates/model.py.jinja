@@ -3,8 +3,13 @@ from __future__ import annotations
 from collections.abc import Mapping
 from typing import Any, TypeVar, BinaryIO, TextIO, TYPE_CHECKING, Generator
 
+{% if class_type == "attrs" %}
 from attrs import define as _attrs_define
 from attrs import field as _attrs_field
+{% elif class_type == "pydantic" %}
+from pydantic import BaseModel as _BaseModel, Field as _Field
+{% endif %}
+
 {% if model.is_multipart_body %}
 import json
 from .. import types
@@ -67,8 +72,12 @@ T = TypeVar("T", bound="{{ class_name }}")
 {%- endif -%}
 {% endmacro %}
 
+{% if class_type == "attrs" %}
 @_attrs_define
 class {{ class_name }}:
+{% elif class_type == "pydantic"%}
+class {{ class_name }}(_BaseModel):
+{% endif %}
     {{ safe_docstring(class_docstring_content(model), omit_if_empty=config.docstrings_on_attributes) | indent(4) }}
 
     {% for property in model.required_properties + model.optional_properties %}
@@ -82,7 +91,12 @@ class {{ class_name }}:
     {% endif %}
     {% endfor %}
     {% if model.additional_properties %}
+    {% if class_type == "attrs" %}
     additional_properties: dict[str, {{ additional_property_type }}] = _attrs_field(init=False, factory=dict)
+    {% elif class_type == "pydantic"%}
+    additional_properties: dict[str, {{ additional_property_type }}] = _Field(init=False, default_factory=dict)
+    {% endif %}
+    
     {% endif %}
 
 {% macro _transform_property(property, content) %}

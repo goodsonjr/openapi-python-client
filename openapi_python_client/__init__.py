@@ -18,7 +18,7 @@ from ruamel.yaml.error import YAMLError
 
 from openapi_python_client import utils
 
-from .config import Config, MetaType
+from .config import Config, ClassType, MetaType
 from .parser import GeneratorData, import_string_from_class
 from .parser.errors import ErrorLevel, GeneratorError
 from .parser.properties import LiteralEnumProperty
@@ -83,6 +83,12 @@ class Project:
         else:
             self.package_dir = self.project_dir / self.package_name
 
+        if config.class_type == ClassType.ATTRS:
+            class_type = "attrs"
+        elif config.class_type == ClassType.PYDANTIC:
+            class_type = "pydantic"
+
+
         self.package_description: str = utils.remove_string_escapes(
             f"A client library for accessing {self.openapi.title}"
         )
@@ -102,6 +108,7 @@ class Project:
             project_dir=self.project_dir,
             openapi=self.openapi,
             endpoint_collections_by_tag=self.openapi.endpoint_collections_by_tag,
+            class_type=class_type
         )
         self.errors: list[GeneratorError] = []
 
